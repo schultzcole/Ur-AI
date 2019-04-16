@@ -31,8 +31,6 @@ def render_board(state):
         state.tiles[-3].token()[1]
     ]
 
-    print("-"*8)
     print("".join(first_line))
     print("".join(second_line))
     print("".join(third_line))
-    print("-"*8)

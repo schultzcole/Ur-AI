@@ -92,7 +92,7 @@ class EndBoardTile(BoardTile):
 
     def move_to(self, source, player):
         super().move_to(source, player)
-        source.players[player] -= 0
+        source.players[player] -= 1
         self.players[player] += 1
 
         return False
@@ -190,7 +190,8 @@ class GameState:
         :return: Whether the current state represented by this object is valid
         """
 
-        return all(tile.is_valid() for tile in self.tiles)
+        return sum(sum(tile.players) for tile in self.tiles) == self.num_pieces * 2 and \
+            all(tile.is_valid() for tile in self.tiles)
 
     def is_move_valid(self, source, dest, player):
         """
