@@ -203,10 +203,10 @@ class GameState:
         """
 
         return source in range(len(self.tiles)) and \
-               dest in range(len(self.tiles)) and \
-               source < dest and \
-               self.tiles[source].players[player] > 0 and \
-               self.tiles[dest].is_move_valid(player)
+            dest in range(len(self.tiles)) and \
+            source < dest and \
+            self.tiles[source].players[player] > 0 and \
+            self.tiles[dest].is_move_valid(player)
 
     def move(self, source, dest, player):
         """

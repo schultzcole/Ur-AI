@@ -33,21 +33,14 @@ def run_game():
 
     while state.won() is None:
         for p in players:
-            print()
-            print("-" * 8)
-            print("Turn {}".format(turn))
-            print("Player 1 | start: {}; finish: {}".format(state.tiles[0].players[0], state.tiles[-1].players[0]))
-            game_board.render_board(state)
-            print("Player 2 | start: {}; finish: {}".format(state.tiles[0].players[1], state.tiles[-1].players[1]))
-            print()
+            print_state(state, turn)
 
             roll = reduce(operator.add, (random.randint(0, 1) for _ in range(4)))
+            valid_moves = state.get_valid_moves(p.player_id, roll)
 
             if roll == 0:
                 print("Player {}, you rolled a {}. Better luck next time!".format(p.player_id + 1, roll))
                 continue
-
-            valid_moves = state.get_valid_moves(p.player_id, roll)
 
             if len(valid_moves) == 0:
                 print("Player {}, you rolled a {}. There are no valid moves with that roll."
@@ -57,7 +50,6 @@ def run_game():
             print("Player {}, you rolled a {}. Valid moves are {}."
                   "\nChoose a piece to move: ".format(p.player_id + 1, roll, valid_moves), end="")
 
-            error_count = 0
             while True:
                 source = p.get_move(valid_moves)
 
@@ -65,19 +57,28 @@ def run_game():
                     state.move(source, source + roll, p.player_id)
                     break
                 except gstate.InvalidMoveException:
-                    error_count += 1
-                    if error_count == 20:
-                        break
                     print("Invalid move, try again: ", end="")
 
         turn += 1
 
     print("\n\nPlayer {} won!".format(state.won()))
+    print_board(state)
+
+    return state.won()
+
+
+def print_state(state, turn):
+    print()
+    print("-" * 8)
+    print("Turn {}".format(turn))
+    print_board(state)
+    print()
+
+
+def print_board(state):
     print("Player 1 | start: {}; finish: {}".format(state.tiles[0].players[0], state.tiles[-1].players[0]))
     game_board.render_board(state)
     print("Player 2 | start: {}; finish: {}".format(state.tiles[0].players[1], state.tiles[-1].players[1]))
-
-    return state.won()
 
 
 if __name__ == '__main__':
