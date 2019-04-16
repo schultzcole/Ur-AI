@@ -27,5 +27,4 @@ class HumanPlayer(Player):
 class RandomAIPlayer(Player):
     def get_move(self, valid_moves):
         selection = random.choice(valid_moves)
-        print(selection)
         return selection
