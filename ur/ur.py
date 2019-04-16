@@ -8,13 +8,22 @@ from stopwatch import Stopwatch
 
 
 def main():
+    n = 100
 
     sw = Stopwatch()
     sw.restart()
+    wins = {1: 0, 2: 0}
 
-    run_game()
+    for i in range(n):
+        wins[run_game()] += 1
 
-    print("Game ran in {}s".format(sw.duration))
+    sw.stop()
+
+    print("\n\n")
+    print("Ran {} games in {}s".format(n, sw.duration))
+
+    for key, val in wins.items():
+        print("Player {} won {} times!".format(key, val))
 
 
 def run_game():
@@ -38,11 +47,19 @@ def run_game():
                 print("Player {}, you rolled a {}. Better luck next time!".format(p.player_id + 1, roll))
                 continue
 
-            print("Player {}, you rolled a {}. choose a piece to move: ".format(p.player_id + 1, roll), end="")
+            valid_moves = state.get_valid_moves(p.player_id, roll)
+
+            if len(valid_moves) == 0:
+                print("Player {}, you rolled a {}. There are no valid moves with that roll."
+                      "Better luck next time!".format(p.player_id + 1, roll))
+                continue
+
+            print("Player {}, you rolled a {}. Valid moves are {}."
+                  "\nChoose a piece to move: ".format(p.player_id + 1, roll, valid_moves), end="")
 
             error_count = 0
             while True:
-                source = p.get_move(None)
+                source = p.get_move(valid_moves)
 
                 try:
                     state.move(source, source + roll, p.player_id)

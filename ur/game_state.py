@@ -191,7 +191,7 @@ class GameState:
         """
 
         return sum(sum(tile.players) for tile in self.tiles) == self.num_pieces * 2 and \
-            all(tile.is_valid() for tile in self.tiles)
+               all(tile.is_valid() for tile in self.tiles)
 
     def is_move_valid(self, source, dest, player):
         """
@@ -203,10 +203,10 @@ class GameState:
         """
 
         return source in range(len(self.tiles)) and \
-            dest in range(len(self.tiles)) and \
-            source < dest and \
-            self.tiles[source].players[player] > 0 and \
-            self.tiles[dest].is_move_valid(player)
+               dest in range(len(self.tiles)) and \
+               source < dest and \
+               self.tiles[source].players[player] > 0 and \
+               self.tiles[dest].is_move_valid(player)
 
     def move(self, source, dest, player):
         """
@@ -223,11 +223,25 @@ class GameState:
         if self.tiles[dest].move_to(self.tiles[source], player):
             self.tiles[0].players[1 - player] += 1
 
+    def get_valid_moves(self, player, roll):
+        """
+        Gets the moves available to player from the current state, given the player's die roll this turn
+        :param player: The player whose moves to get
+        :param roll: The player's roll
+        :return: A list of source tiles  that form valid moves
+        """
+
+        return [i for i, x in enumerate(self.tiles)
+                if x.players[player] > 0 and
+                i + roll < len(self.tiles) and
+                self.tiles[i + roll].is_move_valid(player)]
+
     def won(self):
         """
         The winner of the current state.
         :return: The winner of the current state. None if there is no winner
         """
+
         if self.tiles[-1].players[0] == self.num_pieces:
             return 1
         elif self.tiles[-1].players[1] == self.num_pieces:
