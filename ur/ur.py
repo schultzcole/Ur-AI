@@ -3,50 +3,64 @@ import game_state as gstate
 from functools import reduce
 import operator
 import random
+import player
+from stopwatch import Stopwatch
 
 
 def main():
+
+    sw = Stopwatch()
+    sw.restart()
+
+    run_game()
+
+    print("Game ran in {}s".format(sw.duration))
+
+
+def run_game():
     state = gstate.GameState(7)
-
-    current_player = 0
+    players = [player.RandomAIPlayer(0), player.RandomAIPlayer(1)]
     turn = 0
+
     while state.won() is None:
-        print("-"*8)
-        print("Player 1 | start: {}; finish: {}".format(state.tiles[0].players[0], state.tiles[-1].players[0]))
-        game_board.render_board(state)
-        print("Player 2 | start: {}; finish: {}".format(state.tiles[0].players[1], state.tiles[-1].players[1]))
-        print("-"*8)
+        for p in players:
+            print()
+            print("-" * 8)
+            print("Turn {}".format(turn))
+            print("Player 1 | start: {}; finish: {}".format(state.tiles[0].players[0], state.tiles[-1].players[0]))
+            game_board.render_board(state)
+            print("Player 2 | start: {}; finish: {}".format(state.tiles[0].players[1], state.tiles[-1].players[1]))
+            print()
 
-        roll = reduce(operator.add, (random.randint(0, 1) for _ in range(4)))
-        print("Turn {}".format(turn))
+            roll = reduce(operator.add, (random.randint(0, 1) for _ in range(4)))
 
-        first = True
-        while True:
             if roll == 0:
-                print("Player {}, you rolled a {}. Too bad!".format(current_player + 1, roll))
-                break
-
-            prompt = ""
-            if first:
-                prompt = "Player {}, you rolled a {}. choose a piece to move: ".format(current_player + 1, roll)
-                first = False
-
-            error_prompt = "Invalid move, try again: "
-
-            try:
-                source = int(input(prompt))
-            except ValueError:
-                print(error_prompt, end="")
+                print("Player {}, you rolled a {}. Better luck next time!".format(p.player_id + 1, roll))
                 continue
 
-            try:
-                state.move(source, source + roll, current_player)
-                break
-            except gstate.InvalidMoveException:
-                print(error_prompt, end="")
+            print("Player {}, you rolled a {}. choose a piece to move: ".format(p.player_id + 1, roll), end="")
 
-        turn += current_player
-        current_player = 1 - current_player
+            error_count = 0
+            while True:
+                source = p.get_move(None)
+
+                try:
+                    state.move(source, source + roll, p.player_id)
+                    break
+                except gstate.InvalidMoveException:
+                    error_count += 1
+                    if error_count == 20:
+                        break
+                    print("Invalid move, try again: ", end="")
+
+        turn += 1
+
+    print("\n\nPlayer {} won!".format(state.won()))
+    print("Player 1 | start: {}; finish: {}".format(state.tiles[0].players[0], state.tiles[-1].players[0]))
+    game_board.render_board(state)
+    print("Player 2 | start: {}; finish: {}".format(state.tiles[0].players[1], state.tiles[-1].players[1]))
+
+    return state.won()
 
 
 if __name__ == '__main__':
