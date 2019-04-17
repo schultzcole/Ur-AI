@@ -16,12 +16,11 @@ def main():
     sw.restart()
     wins = {1: 0, 2: 0}
 
-    for i in range(N):
+    for n in range(N):
         wins[run_game()] += 1
 
     sw.stop()
 
-    print("\n\n")
     print("Ran {} games in {}s".format(N, sw.duration))
 
     for key, val in wins.items():
@@ -82,6 +81,7 @@ def run_game():
     output("\n\nPlayer {} won!".format(state.won()))
     print_board(state)
 
+    output("\n\n")
     return state.won()
 
 
