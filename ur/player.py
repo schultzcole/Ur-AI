@@ -17,11 +17,7 @@ class Player(ABC):
 
 class HumanPlayer(Player):
     def get_move(self, valid_moves):
-        while True:
-            try:
-                return int(input(""))
-            except ValueError:
-                print("Invalid input, try again: ", end="")
+        return int(input())
 
 
 class RandomAIPlayer(Player):

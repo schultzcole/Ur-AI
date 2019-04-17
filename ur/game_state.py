@@ -214,7 +214,7 @@ class GameState:
         :param source: the tile from which to move the piece
         :param dest: the tile to which to move the piece
         :param player: the player moving the piece
-        :return: None
+        :return: Returns true if the destination tile is a rosette tile
         """
 
         if not self.is_move_valid(source, dest, player):
@@ -222,6 +222,8 @@ class GameState:
 
         if self.tiles[dest].move_to(self.tiles[source], player):
             self.tiles[0].players[1 - player] += 1
+
+        return self.tiles[dest].is_rosette
 
     def get_valid_moves(self, player, roll):
         """
