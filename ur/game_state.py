@@ -245,6 +245,6 @@ class GameState:
         """
 
         if self.tiles[-1].players[0] == self.num_pieces:
-            return 1
+            return 0
         elif self.tiles[-1].players[1] == self.num_pieces:
-            return 2
+            return 1

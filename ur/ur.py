@@ -1,5 +1,5 @@
 import game_board
-import game_state as gstate
+import game_state
 from functools import reduce
 import operator
 import random
@@ -7,29 +7,29 @@ import player
 from stopwatch import Stopwatch
 import time
 
-PRINT_MOVES = False
-N = 10000
+PRINT_MOVES = True
+N = 1
 
 
 def main():
     sw = Stopwatch()
     sw.restart()
-    wins = {1: 0, 2: 0}
+    players = [player.HumanPlayer(0), player.RandomAIPlayer(1)]
+    wins = {0: 0, 1: 0}
 
     for n in range(N):
-        wins[run_game()] += 1
+        wins[run_game(players)] += 1
 
     sw.stop()
 
     print("Ran {} games in {}s".format(N, sw.duration))
 
     for key, val in wins.items():
-        print("Player {} won {} times!".format(key, val))
+        print("{} won {} times!".format(players[key].name, val))
 
 
-def run_game():
-    state = gstate.GameState(7)
-    players = [player.RandomAIPlayer(0), player.RandomAIPlayer(1)]
+def run_game(players):
+    state = game_state.GameState(7)
     turn = 0
 
     while state.won() is None:
@@ -41,7 +41,7 @@ def run_game():
             while continue_turn:
                 continue_turn = False
 
-                print_state(state, turn)
+                print_state(state)
 
                 roll = reduce(operator.add, (random.randint(0, 1) for _ in range(4)))
                 valid_moves = state.get_valid_moves(p.player_id, roll)
@@ -70,7 +70,7 @@ def run_game():
                             output("Player {} landed on a rosette! Roll again!".format(p.player_id + 1))
                             continue_turn = True
                         break
-                    except gstate.InvalidMoveException:
+                    except game_state.InvalidMoveException:
                         output("Invalid move, try again: ", end="")
 
                 if PRINT_MOVES:
@@ -90,7 +90,7 @@ def output(o="", end="\n"):
         print(o, end=end)
 
 
-def print_state(state, turn):
+def print_state(state):
     if PRINT_MOVES:
         print()
         print_board(state)
