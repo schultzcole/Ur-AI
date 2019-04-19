@@ -1,8 +1,8 @@
-from abc import ABC, abstractmethod
-import random
 import copy
-import utilities
+import random
+from abc import ABC, abstractmethod
 import game_state
+import utilities
 import scoring_funcs
 
 
@@ -24,6 +24,15 @@ class Player(ABC):
     def name(self):
         return "Default Player"
 
+    @abstractmethod
+    def feedback(self, won):
+        """
+        Called upon a game's completion to provide feedback to an AI player
+        :param won: Whether this player won the game
+        :return: None
+        """
+        pass
+
 
 class HumanPlayer(Player):
     def get_move(self, roll, valid_moves, state, player_idx):
@@ -32,6 +41,9 @@ class HumanPlayer(Player):
     @property
     def name(self):
         return "Human Player"
+
+    def feedback(self, won):
+        pass
 
 
 class RandomAIPlayer(Player):
@@ -42,6 +54,9 @@ class RandomAIPlayer(Player):
     @property
     def name(self):
         return "Random AI Player"
+
+    def feedback(self, won):
+        pass
 
 
 class GreedyAIPlayer(Player):
@@ -63,3 +78,22 @@ class GreedyAIPlayer(Player):
     @property
     def name(self):
         return "Greedy AI Player ({})".format(self.score_func.__name__)
+
+    def feedback(self, won):
+        pass
+
+
+class GreedyLearningAIPlayer(GreedyAIPlayer):
+    def score(self, state, player):
+        return scoring_funcs.generic_list_score(state, player, self._tile_values)
+
+    def __init__(self):
+        self._tile_values = [0] * 16
+        super().__init__(self.score)
+
+    @property
+    def name(self):
+        return "Greedy Learning AI Player"
+
+    def feedback(self, won):
+        pass

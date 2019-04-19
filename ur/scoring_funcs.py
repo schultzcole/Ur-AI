@@ -11,7 +11,7 @@ _focus_rosettes_values = [(x ** 2) if x not in __rosette_locations else (x ** 2)
 _penalize_start_values = [x ** 2 if x != __start_loc else -10 for x in range(__start_loc, __end_loc + 1)]
 
 
-def _generic_list_score(state: game_state.SlimGameState, player, tile_values):
+def generic_list_score(state: game_state.SlimGameState, player, tile_values):
     """
     Takes the current state (as a SlimGameState), a player, and a list of score values for each tile and provides
     a score for that state
@@ -39,17 +39,17 @@ def _pow_score(state, player, exponent):
     :param exponent: The exponent to raise the value to
     :return: Total score for this state
     """
-    return _generic_list_score(state, player, [pow(x, exponent) for x in _linear_values])
+    return generic_list_score(state, player, [pow(x, exponent) for x in _linear_values])
 
 
 def flat_score(state, player):
     """ Every tile gets the same score """
-    return _generic_list_score(state, player, _flat_values)
+    return generic_list_score(state, player, _flat_values)
 
 
 def linear_score(state, player):
     """ A linear scale from start to end node """
-    return _generic_list_score(state, player, _linear_values)
+    return generic_list_score(state, player, _linear_values)
 
 
 def pow2_score(state, player):
@@ -70,10 +70,10 @@ def pow3_score(state, player):
 def focus_rosettes_score(state, player):
     """ Power scale, exponent 2.
     Rosettes have 2x value compared to regular tiles """
-    return _generic_list_score(state, player, _focus_rosettes_values)
+    return generic_list_score(state, player, _focus_rosettes_values)
 
 
 def penalize_start_score(state, player):
     """ Power scale, exponent 2.
     Start tile has substantial negative value to encourage the AI to move pieces onto the board """
-    return _generic_list_score(state, player, _penalize_start_values)
+    return generic_list_score(state, player, _penalize_start_values)

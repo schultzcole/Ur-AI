@@ -34,6 +34,8 @@ def run_game_sequence(players):
 
     for n in range(N):
         winner = run_game(players)
+        players[winner].feedback(True)
+        players[1-winner].feedback(False)
         wins[players[winner]] += 1
         players.reverse()
 
