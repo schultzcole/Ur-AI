@@ -5,7 +5,7 @@ import operator
 import random
 import player
 from stopwatch import Stopwatch
-import state_score
+import scoring_funcs
 
 PRINT_MOVES = False
 N = 10000
@@ -14,11 +14,10 @@ PIECES = 4
 
 def main():
     player_pairs = [
-        # [player.RandomAIPlayer(0), player.GreedyAIPlayer(1, state_score.flat_score)],
-        # [player.RandomAIPlayer(0), player.GreedyAIPlayer(1, state_score.linear_score)],
-        [player.RandomAIPlayer(0), player.GreedyAIPlayer(1, state_score.pow2_score)],
-        [player.RandomAIPlayer(0), player.GreedyAIPlayer(1, state_score.pow1_5_score)],
-        [player.RandomAIPlayer(0), player.GreedyAIPlayer(1, state_score.pow1_1_score)],
+        # [player.RandomAIPlayer(0), player.GreedyAIPlayer(1, scoring_funcs.flat_score)],
+        [player.RandomAIPlayer(0), player.GreedyAIPlayer(1, scoring_funcs.linear_score)],
+        [player.RandomAIPlayer(0), player.GreedyAIPlayer(1, scoring_funcs.pow2_score)],
+        [player.RandomAIPlayer(0), player.GreedyAIPlayer(1, scoring_funcs.pow1_5_score)],
     ]
 
     for pair in player_pairs:
