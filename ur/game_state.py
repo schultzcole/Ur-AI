@@ -268,5 +268,5 @@ class SlimGameState:
         """
         self.state[source][player] -= 1
         self.state[dest][player] += 1
-        if not (dest == 0 or dest == len(self.state) - 1):
+        if 5 <= dest <= 12:
             self.state[dest][1-player] = 0

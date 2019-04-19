@@ -1,22 +1,10 @@
 import game_state
 
-
-def naive_score_full_state(state: game_state.GameState, player):
-    tile_scores = [x for x in range(len(state.tiles))]
-
-    player_score = 0
-    other_score = 0
-
-    for i, t in enumerate(state.tiles):
-        player_score += t.players[player] * tile_scores[i]
-        other_score += t.players[1-player] * tile_scores[i]
-
-    return player_score - other_score
+_flat_scores = [1] * 16
+_linear_scores = [x for x in range(1, 17)]
 
 
-def naive_score(state: game_state.SlimGameState, player):
-    tile_scores = [x for x in range(len(state.state))]
-
+def _generic_score(state: game_state.SlimGameState, player, tile_scores):
     player_score = 0
     other_score = 0
 
@@ -27,9 +15,25 @@ def naive_score(state: game_state.SlimGameState, player):
     return player_score - other_score
 
 
-def test():
-    pass
+def _pow_score(state, player, power):
+    return _generic_score(state, player, [pow(x, power) for x in _linear_scores])
 
 
-if __name__ == "__main__":
-    test()
+def flat_score(state, player):
+    return _generic_score(state, player, _flat_scores)
+
+
+def linear_score(state, player):
+    return _generic_score(state, player, _linear_scores)
+
+
+def pow2_score(state, player):
+    return _pow_score(state, player, 2)
+
+
+def pow1_5_score(state, player):
+    return _pow_score(state, player, 1.5)
+
+
+def pow3_score(state, player):
+    return _pow_score(state, player, 3)

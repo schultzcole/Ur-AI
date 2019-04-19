@@ -49,28 +49,6 @@ class RandomAIPlayer(Player):
         return "Random AI Player"
 
 
-class GreedyAIPlayerSlow(Player):
-    def __init__(self, player_id, score_func):
-        super().__init__(player_id)
-
-        self.score_func = score_func
-
-    def get_move(self, roll, valid_moves, state):
-        move_scores = [0 for _ in valid_moves]
-
-        for i, move in enumerate(valid_moves):
-            new_state = copy.deepcopy(state)
-            new_state.move(move, move + roll, self.player_id)
-            move_scores[i] = self.score_func(new_state, self.player_id)
-
-        choice = valid_moves[utilities.max_index(move_scores)]
-        return choice
-
-    @property
-    def _name(self):
-        return "Slow Greedy AI Player ({})".format(self.score_func.__name__)
-
-
 class GreedyAIPlayer(Player):
     def __init__(self, player_id, score_func):
         super().__init__(player_id)

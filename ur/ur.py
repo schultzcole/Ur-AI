@@ -8,27 +8,42 @@ from stopwatch import Stopwatch
 import state_score
 
 PRINT_MOVES = False
-N = 1000
+N = 10000
 PIECES = 4
 
 
 def main():
+    player_pairs = [
+        # [player.RandomAIPlayer(0), player.GreedyAIPlayer(1, state_score.flat_score)],
+        # [player.RandomAIPlayer(0), player.GreedyAIPlayer(1, state_score.linear_score)],
+        [player.RandomAIPlayer(0), player.GreedyAIPlayer(1, state_score.pow2_score)],
+        [player.RandomAIPlayer(0), player.GreedyAIPlayer(1, state_score.pow1_5_score)],
+        [player.RandomAIPlayer(0), player.GreedyAIPlayer(1, state_score.pow1_1_score)],
+    ]
+
+    for pair in player_pairs:
+        run_game_sequence(pair)
+
+
+def run_game_sequence(players):
     sw = Stopwatch()
     sw.restart()
-    players = [player.GreedyAIPlayerSlow(0, state_score.naive_score_full_state),
-               player.GreedyAIPlayer(1, state_score.naive_score)]
-    wins = {0: 0, 1: 0}
+
+    wins = {players[0]: 0, players[1]: 0}
 
     for n in range(N):
-        wins[run_game(players)] += 1
+        winner = run_game(players)
+        wins[players[winner]] += 1
         players.reverse()
+        players[0].player_id = 0
+        players[1].player_id = 1
 
     sw.stop()
 
     print("Ran {} games in {}s".format(N, sw.duration))
 
     for key, val in wins.items():
-        print("{} won {} times!".format(players[key].name, val))
+        print("{} won {} times!".format(key.name, val))
 
 
 def run_game(players):
