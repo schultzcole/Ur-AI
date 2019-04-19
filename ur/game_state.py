@@ -248,3 +248,25 @@ class GameState:
             return 0
         elif self.tiles[-1].players[1] == self.num_pieces:
             return 1
+
+
+class SlimGameState:
+    """
+    A slim copy of a full GameState, for faster copying.
+    This slim version of GameState has none of the fancier error checking. It assumes valid input in all cases.
+    Intended only for use when exploring the state tree
+    """
+
+    def __init__(self, state):
+        self.state = {}
+        for i, tile in enumerate(state.tiles):
+            self.state[i] = [tile.players[0], tile.players[1]]
+
+    def move(self, source, dest, player):
+        """
+        Just does a raw move from source to dest for the given player. Invalid inputs may give invalid results.
+        """
+        self.state[source][player] -= 1
+        self.state[dest][player] += 1
+        if not (dest == 0 or dest == len(self.state) - 1):
+            self.state[dest][1-player] = 0

@@ -5,20 +5,23 @@ import operator
 import random
 import player
 from stopwatch import Stopwatch
-import time
+import state_score
 
-PRINT_MOVES = True
-N = 1
+PRINT_MOVES = False
+N = 1000
+PIECES = 4
 
 
 def main():
     sw = Stopwatch()
     sw.restart()
-    players = [player.HumanPlayer(0), player.RandomAIPlayer(1)]
+    players = [player.GreedyAIPlayerSlow(0, state_score.naive_score_full_state),
+               player.GreedyAIPlayer(1, state_score.naive_score)]
     wins = {0: 0, 1: 0}
 
     for n in range(N):
         wins[run_game(players)] += 1
+        players.reverse()
 
     sw.stop()
 
@@ -29,7 +32,7 @@ def main():
 
 
 def run_game(players):
-    state = game_state.GameState(7)
+    state = game_state.GameState(PIECES)
     turn = 0
 
     while state.won() is None:
@@ -60,7 +63,7 @@ def run_game(players):
 
                 while True:
                     try:
-                        source = p.get_move(valid_moves)
+                        source = p.get_move(roll, valid_moves, state)
                     except ValueError:
                         output("Invalid input, try again: ", end="")
                         continue
@@ -74,7 +77,11 @@ def run_game(players):
                         output("Invalid move, try again: ", end="")
 
                 if PRINT_MOVES:
-                    time.sleep(.5)
+                    # time.sleep(.5)
+                    pass
+
+            if state.won() is not None:
+                break
 
         turn += 1
 
