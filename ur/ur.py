@@ -8,16 +8,18 @@ from stopwatch import Stopwatch
 import scoring_funcs
 
 PRINT_MOVES = False
-N = 10000
+N = 1000
 PIECES = 4
 
 
 def main():
     player_pairs = [
         # [player.RandomAIPlayer(0), player.GreedyAIPlayer(1, scoring_funcs.flat_score)],
-        [player.RandomAIPlayer(0), player.GreedyAIPlayer(1, scoring_funcs.linear_score)],
-        [player.RandomAIPlayer(0), player.GreedyAIPlayer(1, scoring_funcs.pow2_score)],
-        [player.RandomAIPlayer(0), player.GreedyAIPlayer(1, scoring_funcs.pow1_5_score)],
+        [player.RandomAIPlayer(), player.RandomAIPlayer()],
+        [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.linear_score)],
+        [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.pow1_5_score)],
+        # [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.focus_rosettes_score)],
+        # [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.penalize_start_score)],
     ]
 
     for pair in player_pairs:
@@ -34,15 +36,15 @@ def run_game_sequence(players):
         winner = run_game(players)
         wins[players[winner]] += 1
         players.reverse()
-        players[0].player_id = 0
-        players[1].player_id = 1
 
     sw.stop()
 
-    print("Ran {} games in {}s".format(N, sw.duration))
+    print("Ran {} games in {:.4f}s".format(N, sw.duration))
 
     for key, val in wins.items():
-        print("{} won {} times!".format(key.name, val))
+        print("{} won {} times ({:.2f}%)!".format(key.name, val, val/N*100))
+
+    print()
 
 
 def run_game(players):
@@ -53,7 +55,7 @@ def run_game(players):
         output()
         output("-" * 8)
         output("Turn {}".format(turn))
-        for p in players:
+        for idx, p in enumerate(players):
             continue_turn = True
             while continue_turn:
                 continue_turn = False
@@ -61,30 +63,30 @@ def run_game(players):
                 print_state(state)
 
                 roll = reduce(operator.add, (random.randint(0, 1) for _ in range(4)))
-                valid_moves = state.get_valid_moves(p.player_id, roll)
+                valid_moves = state.get_valid_moves(idx, roll)
 
                 if roll == 0:
-                    output("Player {}, you rolled a {}. Better luck next time!".format(p.player_id + 1, roll))
+                    output("Player {}, you rolled a {}. Better luck next time!".format(idx + 1, roll))
                     continue
 
                 if len(valid_moves) == 0:
                     output("Player {}, you rolled a {}. There are no valid moves with that roll."
-                           "Better luck next time!".format(p.player_id + 1, roll))
+                           "Better luck next time!".format(idx + 1, roll))
                     continue
 
                 output("Player {}, you rolled a {}. Valid moves are {}."
-                       "\nChoose a piece to move: ".format(p.player_id + 1, roll, valid_moves), end="")
+                       "\nChoose a piece to move: ".format(idx + 1, roll, valid_moves), end="")
 
                 while True:
                     try:
-                        source = p.get_move(roll, valid_moves, state)
+                        source = p.get_move(roll, valid_moves, state, idx)
                     except ValueError:
                         output("Invalid input, try again: ", end="")
                         continue
 
                     try:
-                        if state.move(source, source + roll, p.player_id):
-                            output("Player {} landed on a rosette! Roll again!".format(p.player_id + 1))
+                        if state.move(source, source + roll, idx):
+                            output("Player {} landed on a rosette! Roll again!".format(idx + 1))
                             continue_turn = True
                         break
                     except game_state.InvalidMoveException:

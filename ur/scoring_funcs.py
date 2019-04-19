@@ -1,7 +1,14 @@
 import game_state
 
+__rosette_locations = [4, 8, 13]
+__start_loc = 0
+__end_loc = 15
+
 _flat_values = [1] * 16
-_linear_values = [x for x in range(1, 17)]
+_linear_values = [x for x in range(__start_loc, __end_loc + 1)]
+_focus_rosettes_values = [(x ** 2) if x not in __rosette_locations else (x ** 2) * 2
+                          for x in range(__start_loc, __end_loc + 1)]
+_penalize_start_values = [x ** 2 if x != __start_loc else -10 for x in range(__start_loc, __end_loc + 1)]
 
 
 def _generic_list_score(state: game_state.SlimGameState, player, tile_values):
@@ -36,20 +43,37 @@ def _pow_score(state, player, exponent):
 
 
 def flat_score(state, player):
+    """ Every tile gets the same score """
     return _generic_list_score(state, player, _flat_values)
 
 
 def linear_score(state, player):
+    """ A linear scale from start to end node """
     return _generic_list_score(state, player, _linear_values)
 
 
 def pow2_score(state, player):
+    """ Power scale, exponent 2 """
     return _pow_score(state, player, 2)
 
 
 def pow1_5_score(state, player):
+    """ Power scale, exponent 1.5 """
     return _pow_score(state, player, 1.5)
 
 
 def pow3_score(state, player):
+    """ Power scale, exponent 3 """
     return _pow_score(state, player, 3)
+
+
+def focus_rosettes_score(state, player):
+    """ Power scale, exponent 2.
+    Rosettes have 2x value compared to regular tiles """
+    return _generic_list_score(state, player, _focus_rosettes_values)
+
+
+def penalize_start_score(state, player):
+    """ Power scale, exponent 2.
+    Start tile has substantial negative value to encourage the AI to move pieces onto the board """
+    return _generic_list_score(state, player, _penalize_start_values)
