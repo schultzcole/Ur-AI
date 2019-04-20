@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 import game_state
 import utilities
 import scoring_funcs
+import math
 
 
 class Player(ABC):
@@ -84,6 +85,55 @@ class GreedyAIPlayer(Player):
 
 
 class GreedyLearningAIPlayer(GreedyAIPlayer):
+    class TreeNode:
+        @staticmethod
+        def mutate(values):
+            new_values = copy.copy(values)
+
+            mutate_idx = random.randrange(len(new_values))
+            new_values[mutate_idx] += int(random.triangular(-3, 3, 0))
+
+            return new_values
+
+        def __init__(self, parent):
+            self._parent = parent
+            self._children = []
+            self._wins = 0
+            self._times = 0
+            self.tile_values = [0] * 16
+
+            if parent is not None:
+                self.tile_values = self.mutate(parent.tile_values)
+
+        def propagate_game(self, won):
+            if won:
+                self._wins += 1
+
+            self._times += 1
+            self._parent.propogate_game(won)
+
+        def upper_confidence_bound(self):
+            return self._wins / self._times + math.sqrt(2 * math.log(self._parent._times) / self._times)
+
+        def add_child(self):
+            child = GreedyLearningAIPlayer.TreeNode(self)
+            self._children += child
+            return child
+
+        def select_in_descendants(self):
+            if len(self._children) == 0:
+                return self
+
+            max_ucb = 0
+            max_idx = 0
+            for i, child in enumerate(self._children):
+                curr_ucb = child.upper_confidence_bound()
+                if curr_ucb > max_ucb:
+                    max_ucb = curr_ucb
+                    max_idx = i
+
+            return self._children[max_idx]
+
     def score(self, state, player):
         return scoring_funcs.generic_list_score(state, player, self._tile_values)
 

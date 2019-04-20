@@ -17,7 +17,7 @@ def main():
         # [player.RandomAIPlayer(0), player.GreedyAIPlayer(1, scoring_funcs.flat_score)],
         [player.RandomAIPlayer(), player.RandomAIPlayer()],
         [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.linear_score)],
-        [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.pow1_5_score)],
+        [player.RandomAIPlayer(), player.GreedyLearningAIPlayer()],
         # [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.focus_rosettes_score)],
         # [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.penalize_start_score)],
     ]
