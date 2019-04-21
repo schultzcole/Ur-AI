@@ -110,14 +110,15 @@ class GreedyLearningAIPlayer(GreedyAIPlayer):
                 self._wins += 1
 
             self._times += 1
-            self._parent.propogate_game(won)
+            if self._parent is not None:
+                self._parent.propagate_game(won)
 
         def upper_confidence_bound(self):
             return self._wins / self._times + math.sqrt(2 * math.log(self._parent._times) / self._times)
 
         def add_child(self):
             child = GreedyLearningAIPlayer.TreeNode(self)
-            self._children += child
+            self._children.append(child)
             return child
 
         def select_in_descendants(self):
@@ -132,13 +133,20 @@ class GreedyLearningAIPlayer(GreedyAIPlayer):
                     max_ucb = curr_ucb
                     max_idx = i
 
-            return self._children[max_idx]
+            return self if self._parent is not None and self.upper_confidence_bound() > max_ucb else self._children[max_idx]
+
+        def display_tree_stats(self):
+            print(len(self._children))
+
+            for child in self._children:
+                child.display_tree_stats()
 
     def score(self, state, player):
-        return scoring_funcs.generic_list_score(state, player, self._tile_values)
+        return scoring_funcs.generic_list_score(state, player, self._brain.tile_values)
 
     def __init__(self):
-        self._tile_values = [0] * 16
+        self._tree_root = GreedyLearningAIPlayer.TreeNode(None)
+        self._brain = self._tree_root
         super().__init__(self.score)
 
     @property
@@ -146,4 +154,5 @@ class GreedyLearningAIPlayer(GreedyAIPlayer):
         return "Greedy Learning AI Player"
 
     def feedback(self, won):
-        pass
+        self._brain.propagate_game(won)
+        self._brain = self._tree_root.select_in_descendants().add_child()

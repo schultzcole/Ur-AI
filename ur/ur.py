@@ -8,15 +8,15 @@ from stopwatch import Stopwatch
 import scoring_funcs
 
 PRINT_MOVES = False
-N = 1000
+N = 50
 PIECES = 4
 
 
 def main():
     player_pairs = [
         # [player.RandomAIPlayer(0), player.GreedyAIPlayer(1, scoring_funcs.flat_score)],
-        [player.RandomAIPlayer(), player.RandomAIPlayer()],
-        [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.linear_score)],
+        # [player.RandomAIPlayer(), player.RandomAIPlayer()],
+        # [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.linear_score)],
         [player.RandomAIPlayer(), player.GreedyLearningAIPlayer()],
         # [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.focus_rosettes_score)],
         # [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.penalize_start_score)],
@@ -47,6 +47,11 @@ def run_game_sequence(players):
         print("{} won {} times ({:.2f}%)!".format(key.name, val, val/N*100))
 
     print()
+    for p in players:
+        try:
+            p._tree_root.display_tree_stats()
+        except Exception:
+            pass
 
 
 def run_game(players):
