@@ -133,7 +133,9 @@ class GreedyLearningAIPlayer(GreedyAIPlayer):
                     max_ucb = curr_ucb
                     max_idx = i
 
-            return self if self._parent is not None and self.upper_confidence_bound() > max_ucb else self._children[max_idx]
+            return self if self._parent is not None and self.upper_confidence_bound() > max_ucb else \
+                self._children[max_idx].select_in_descendants()
+            # return self._children[max_idx].select_in_descendants()
 
         def display_tree_stats(self):
             print(len(self._children))

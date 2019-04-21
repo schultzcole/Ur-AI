@@ -8,7 +8,7 @@ from stopwatch import Stopwatch
 import scoring_funcs
 
 PRINT_MOVES = False
-N = 50
+N = 100000
 PIECES = 4
 
 
@@ -47,11 +47,6 @@ def run_game_sequence(players):
         print("{} won {} times ({:.2f}%)!".format(key.name, val, val/N*100))
 
     print()
-    for p in players:
-        try:
-            p._tree_root.display_tree_stats()
-        except Exception:
-            pass
 
 
 def run_game(players):
