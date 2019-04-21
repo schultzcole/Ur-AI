@@ -34,6 +34,13 @@ class Player(ABC):
         """
         pass
 
+    @abstractmethod
+    def clean_up(self):
+        """
+        Called once a game series involving this player has completed.
+        :return: None
+        """
+        pass
 
 class HumanPlayer(Player):
     def get_move(self, roll, valid_moves, state, player_idx):
@@ -44,6 +51,9 @@ class HumanPlayer(Player):
         return "Human Player"
 
     def feedback(self, won):
+        pass
+
+    def clean_up(self):
         pass
 
 
@@ -57,6 +67,9 @@ class RandomAIPlayer(Player):
         return "Random AI Player"
 
     def feedback(self, won):
+        pass
+
+    def clean_up(self):
         pass
 
 
@@ -83,6 +96,9 @@ class GreedyAIPlayer(Player):
     def feedback(self, won):
         pass
 
+    def clean_up(self):
+        pass
+
 
 class GreedyLearningAIPlayer(GreedyAIPlayer):
     class TreeNode:
@@ -91,7 +107,7 @@ class GreedyLearningAIPlayer(GreedyAIPlayer):
             new_values = copy.copy(values)
 
             mutate_idx = random.randrange(len(new_values))
-            new_values[mutate_idx] += int(random.triangular(-3, 3, 0))
+            new_values[mutate_idx] += round(random.triangular(-3, 3, 0), 3)
 
             return new_values
 
@@ -105,6 +121,12 @@ class GreedyLearningAIPlayer(GreedyAIPlayer):
             if parent is not None:
                 self.tile_values = self.mutate(parent.tile_values)
 
+        @property
+        def win_rate(self):
+            if self._times == 0:
+                return float("-inf")
+            return self._wins / self._times
+
         def propagate_game(self, won):
             if won:
                 self._wins += 1
@@ -114,6 +136,8 @@ class GreedyLearningAIPlayer(GreedyAIPlayer):
                 self._parent.propagate_game(won)
 
         def upper_confidence_bound(self):
+            if self._times == 0:
+                return 0
             return self._wins / self._times + math.sqrt(2 * math.log(self._parent._times) / self._times)
 
         def add_child(self):
@@ -137,6 +161,23 @@ class GreedyLearningAIPlayer(GreedyAIPlayer):
                 self._children[max_idx].select_in_descendants()
             # return self._children[max_idx].select_in_descendants()
 
+        def winningest_brain(self):
+            if len(self._children) == 0:
+                return self
+
+            best_so_far = self._children[0]
+
+            for i, child in enumerate(self._children):
+                best = child.winningest_brain()
+
+                if best.win_rate == best_so_far.win_rate:
+                    if best._times > best_so_far._times:
+                        best_so_far = best
+                elif best.win_rate > best_so_far.win_rate:
+                    best_so_far = best
+
+            return self if self.win_rate > best_so_far.win_rate else best_so_far
+
         def display_tree_stats(self):
             print(len(self._children))
 
@@ -158,3 +199,9 @@ class GreedyLearningAIPlayer(GreedyAIPlayer):
     def feedback(self, won):
         self._brain.propagate_game(won)
         self._brain = self._tree_root.select_in_descendants().add_child()
+
+    def clean_up(self):
+        print("Best brain: {}".format(self.get_best_brain().tile_values))
+
+    def get_best_brain(self):
+        return self._tree_root.winningest_brain()

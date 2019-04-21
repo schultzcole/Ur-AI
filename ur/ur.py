@@ -8,7 +8,7 @@ from stopwatch import Stopwatch
 import scoring_funcs
 
 PRINT_MOVES = False
-N = 100000
+N = 10000
 PIECES = 4
 
 
@@ -18,7 +18,7 @@ def main():
         # [player.RandomAIPlayer(), player.RandomAIPlayer()],
         # [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.linear_score)],
         [player.RandomAIPlayer(), player.GreedyLearningAIPlayer()],
-        # [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.focus_rosettes_score)],
+        # [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.learned_score)],
         # [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.penalize_start_score)],
     ]
 
@@ -45,6 +45,9 @@ def run_game_sequence(players):
 
     for key, val in wins.items():
         print("{} won {} times ({:.2f}%)!".format(key.name, val, val/N*100))
+
+    for p in players:
+        p.clean_up()
 
     print()
 
