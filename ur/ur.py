@@ -8,17 +8,17 @@ from stopwatch import Stopwatch
 import scoring_funcs
 
 PRINT_MOVES = False
-N = 10000
+N = 1000
 PIECES = 4
 
 
 def main():
     player_pairs = [
-        # [player.RandomAIPlayer(0), player.GreedyAIPlayer(1, scoring_funcs.flat_score)],
         # [player.RandomAIPlayer(), player.RandomAIPlayer()],
         # [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.linear_score)],
-        [player.RandomAIPlayer(), player.GreedyLearningAIPlayer()],
-        # [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.learned_score)],
+        # [player.GreedyAIPlayer(scoring_funcs.pow2_score), player.GreedyLearningAIPlayer(1, 3)],
+        [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.learned_score)],
+        [player.GreedyAIPlayer(scoring_funcs.pow2_score), player.GreedyAIPlayer(scoring_funcs.learned_score)],
         # [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.penalize_start_score)],
     ]
 
@@ -33,6 +33,8 @@ def run_game_sequence(players):
     wins = {players[0]: 0, players[1]: 0}
 
     for n in range(N):
+        if n % (N/20) == 0:
+            print(".", end="", flush=True)
         winner = run_game(players)
         players[winner].feedback(True)
         players[1-winner].feedback(False)
@@ -41,6 +43,7 @@ def run_game_sequence(players):
 
     sw.stop()
 
+    print()
     print("Ran {} games in {:.4f}s".format(N, sw.duration))
 
     for key, val in wins.items():

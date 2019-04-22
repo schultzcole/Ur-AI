@@ -9,8 +9,7 @@ _linear_values = [x for x in range(__start_loc, __end_loc + 1)]
 _focus_rosettes_values = [(x ** 2) if x not in __rosette_locations else (x ** 2) * 2
                           for x in range(__start_loc, __end_loc + 1)]
 _penalize_start_values = [x ** 2 if x != __start_loc else -10 for x in range(__start_loc, __end_loc + 1)]
-
-_learned_values = [0.048588270391728194, 0, 0, 0.6379747844638475, -0.06369112361723328, 1.4844384781356963, -1.7959608074377473, 2.74830608600796, 0.9613132391264281, -1.0045657478715024, 0, 1.242407007754644, -0.3528176241587637, 0, 0, 0]
+_learned_values = [0.526, -0.347, 3.849, 2.402, 6.648, 4.627, 6.000, 7.297, 10.813, 7.080, 6.949, 10.294, 8.088, 12.688, 13.205, 15.465]
 
 
 def generic_list_score(state: game_state.SlimGameState, player, tile_values):

@@ -102,21 +102,23 @@ class GreedyAIPlayer(Player):
 
 class GreedyLearningAIPlayer(GreedyAIPlayer):
     class TreeNode:
-        @staticmethod
-        def mutate(values):
+        def mutate(self, values):
             new_values = copy.copy(values)
 
-            mutate_idx = random.randrange(len(new_values))
-            new_values[mutate_idx] += round(random.triangular(-3, 3, 0), 3)
+            for i in range(self._mutation_rate):
+                mutate_idx = random.randrange(len(new_values))
+                new_values[mutate_idx] += random.triangular(-self._mutation_range, self._mutation_range, 0)
 
             return new_values
 
-        def __init__(self, parent):
+        def __init__(self, parent, mutation_rate=1, mutation_range=3):
             self._parent = parent
             self._children = []
             self._wins = 0
             self._times = 0
-            self.tile_values = [0] * 16
+            self._mutation_rate = mutation_rate
+            self._mutation_range = mutation_range
+            self.tile_values = [x for x in range(16)]
 
             if parent is not None:
                 self.tile_values = self.mutate(parent.tile_values)
@@ -141,7 +143,7 @@ class GreedyLearningAIPlayer(GreedyAIPlayer):
             return self._wins / self._times + math.sqrt(2 * math.log(self._parent._times) / self._times)
 
         def add_child(self):
-            child = GreedyLearningAIPlayer.TreeNode(self)
+            child = GreedyLearningAIPlayer.TreeNode(self, self._mutation_rate, self._mutation_range)
             self._children.append(child)
             return child
 
@@ -187,8 +189,8 @@ class GreedyLearningAIPlayer(GreedyAIPlayer):
     def score(self, state, player):
         return scoring_funcs.generic_list_score(state, player, self._brain.tile_values)
 
-    def __init__(self):
-        self._tree_root = GreedyLearningAIPlayer.TreeNode(None)
+    def __init__(self, mutation_rate=1, mutation_range=3):
+        self._tree_root = GreedyLearningAIPlayer.TreeNode(None, mutation_rate, mutation_range)
         self._brain = self._tree_root
         super().__init__(self.score)
 
@@ -201,7 +203,12 @@ class GreedyLearningAIPlayer(GreedyAIPlayer):
         self._brain = self._tree_root.select_in_descendants().add_child()
 
     def clean_up(self):
-        print("Best brain: {}".format(self.get_best_brain().tile_values))
+        print("Best brain:\n[", end="")
+
+        for i, val in enumerate(self.get_best_brain().tile_values):
+            print("{:.3f}{}".format(val, "" if i == 15 else ", "), end="")
+
+        print("]")
 
     def get_best_brain(self):
         return self._tree_root.winningest_brain()
