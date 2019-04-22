@@ -17,23 +17,23 @@ def main():
         # [player.RandomAIPlayer(), player.RandomAIPlayer()],
         # [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.linear_score)],
         # [player.GreedyLearningAIPlayer(1, 3), player.GreedyLearningAIPlayer(1, 3)],
-        # [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.learned_vs_learner_score)],
+        [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.learned_vs_learner_score)],
         [player.GreedyAIPlayer(scoring_funcs.pow2_score), player.GreedyAIPlayer(scoring_funcs.learned_vs_learner_score)],
         # [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.penalize_start_score)],
     ]
 
     for pair in player_pairs:
-        run_game_sequence(pair)
+        run_game_sequence(pair, N)
 
 
-def run_game_sequence(players):
+def run_game_sequence(players, n):
     sw = Stopwatch()
     sw.restart()
 
     wins = {players[0]: 0, players[1]: 0}
 
-    for n in range(N):
-        if n % (N/20) == 0:
+    for i in range(n):
+        if i % (n/20) == 0:
             print(".", end="", flush=True)
         winner = run_game(players)
         players[winner].feedback(True)
@@ -44,15 +44,22 @@ def run_game_sequence(players):
     sw.stop()
 
     print()
-    print("Ran {} games in {:.4f}s".format(N, sw.duration))
+    print("Ran {} games in {:.4f}s".format(n, sw.duration))
 
+    best = None
+    best_wins = 0
     for key, val in wins.items():
-        print("{} won {} times ({:.2f}%)!".format(key.name, val, val/N*100))
+        if val > best_wins:
+            best_wins = val
+            best = key
+        print("{} won {} times ({:.2f}%)!".format(key.name, val, val/n*100))
 
     for p in players:
         p.clean_up()
 
     print()
+
+    return best, best_wins/n
 
 
 def run_game(players):
