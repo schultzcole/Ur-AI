@@ -10,6 +10,7 @@ _focus_rosettes_values = [(x ** 2) if x not in __rosette_locations else (x ** 2)
                           for x in range(__start_loc, __end_loc + 1)]
 _penalize_start_values = [x ** 2 if x != __start_loc else -10 for x in range(__start_loc, __end_loc + 1)]
 _learned_values = [0.526, -0.347, 3.849, 2.402, 6.648, 4.627, 6.000, 7.297, 10.813, 7.080, 6.949, 10.294, 8.088, 12.688, 13.205, 15.465]
+_learned_vs_learner_values = [0.000, 2.236, 2.523, 3.914, 5.048, 5.000, 5.837, 7.000, 8.659, 8.727, 8.989, 10.768, 12.376, 13.000, 14.000, 17.872]
 
 
 def generic_list_score(state: game_state.SlimGameState, player, tile_values):
@@ -82,3 +83,7 @@ def penalize_start_score(state, player):
 
 def learned_score(state, player):
     return generic_list_score(state, player, _learned_values)
+
+
+def learned_vs_learner_score(state, player):
+    return generic_list_score(state, player, _learned_vs_learner_values)

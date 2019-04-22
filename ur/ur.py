@@ -16,9 +16,9 @@ def main():
     player_pairs = [
         # [player.RandomAIPlayer(), player.RandomAIPlayer()],
         # [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.linear_score)],
-        # [player.GreedyAIPlayer(scoring_funcs.pow2_score), player.GreedyLearningAIPlayer(1, 3)],
-        [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.learned_score)],
-        [player.GreedyAIPlayer(scoring_funcs.pow2_score), player.GreedyAIPlayer(scoring_funcs.learned_score)],
+        # [player.GreedyLearningAIPlayer(1, 3), player.GreedyLearningAIPlayer(1, 3)],
+        # [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.learned_vs_learner_score)],
+        [player.GreedyAIPlayer(scoring_funcs.pow2_score), player.GreedyAIPlayer(scoring_funcs.learned_vs_learner_score)],
         # [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.penalize_start_score)],
     ]
 
