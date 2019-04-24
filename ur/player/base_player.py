@@ -7,7 +7,7 @@ import scoring_funcs
 import math
 
 
-class Player(ABC):
+class BasePlayer(ABC):
     @abstractmethod
     def get_move(self, roll, valid_moves, state, player_idx):
         """
@@ -42,7 +42,7 @@ class Player(ABC):
         """
         pass
 
-class HumanPlayer(Player):
+class HumanPlayer(BasePlayer):
     def get_move(self, roll, valid_moves, state, player_idx):
         return int(input())
 
@@ -57,7 +57,7 @@ class HumanPlayer(Player):
         pass
 
 
-class RandomAIPlayer(Player):
+class RandomAIPlayer(BasePlayer):
     def get_move(self, roll, valid_moves, state, player_idx):
         selection = random.choice(valid_moves)
         return selection
@@ -73,7 +73,7 @@ class RandomAIPlayer(Player):
         pass
 
 
-class GreedyAIPlayer(Player):
+class GreedyAIPlayer(BasePlayer):
     def __init__(self, score_func):
         self.score_func = score_func
 

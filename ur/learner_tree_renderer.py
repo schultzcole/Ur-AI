@@ -1,4 +1,4 @@
-import player
+from player import base_player
 import ur
 from anytree import Node
 from anytree.exporter import DotExporter
@@ -26,7 +26,7 @@ def create_anytree(curr, parent):
 
 
 def main():
-    players = [player.RandomAIPlayer(), player.GreedyLearningAIPlayer()]
+    players = [base_player.RandomAIPlayer(), base_player.GreedyLearningAIPlayer()]
     ur.run_game_sequence(players, N)
     global best_brain
     best_brain = players[1].get_best_brain()
