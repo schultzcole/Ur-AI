@@ -2,6 +2,11 @@ from abc import ABC, abstractmethod
 
 
 class BasePlayer(ABC):
+    @property
+    @abstractmethod
+    def name(self):
+        return "Default Player"
+
     @abstractmethod
     def get_move(self, roll, valid_moves, state, player_idx):
         """
@@ -13,11 +18,6 @@ class BasePlayer(ABC):
         :return: The chosen move source tile
         """
         pass
-
-    @property
-    @abstractmethod
-    def name(self):
-        return "Default Player"
 
     @abstractmethod
     def feedback(self, won):

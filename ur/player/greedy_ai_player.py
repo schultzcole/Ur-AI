@@ -8,6 +8,10 @@ class GreedyAIPlayer(BasePlayer):
     def __init__(self, score_func):
         self.score_func = score_func
 
+    @property
+    def name(self):
+        return "Greedy AI Player ({})".format(self.score_func.__name__)
+
     def get_move(self, roll, valid_moves, state, player_idx):
         slim_state = game_state.SlimGameState(state)
         move_scores = [0 for _ in valid_moves]
@@ -19,10 +23,6 @@ class GreedyAIPlayer(BasePlayer):
 
         choice = valid_moves[utilities.max_index(move_scores)]
         return choice
-
-    @property
-    def name(self):
-        return "Greedy AI Player ({})".format(self.score_func.__name__)
 
     def feedback(self, won):
         pass

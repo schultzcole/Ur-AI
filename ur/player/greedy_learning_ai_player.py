@@ -6,9 +6,6 @@ from player import GreedyAIPlayer
 
 
 class GreedyLearningAIPlayer(GreedyAIPlayer):
-    def score(self, state, player):
-        return scoring_funcs.generic_list_score(state, player, self._brain.tile_values)
-
     def __init__(self, mutation_rate=1, mutation_range=3):
         self._tree_root = TreeNode(None, mutation_rate, mutation_range)
         self._brain = self._tree_root
@@ -17,6 +14,9 @@ class GreedyLearningAIPlayer(GreedyAIPlayer):
     @property
     def name(self):
         return "Greedy Learning AI Player"
+
+    def score(self, state, player):
+        return scoring_funcs.generic_list_score(state, player, self._brain.tile_values)
 
     def feedback(self, won):
         self._brain.propagate_game(won)
