@@ -1,6 +1,12 @@
 # AI Agent for the Royal Game of Ur
 
-**Requirements**: Python 3.5 or greater. Viewing the game board requires a unicode capable terminal.
+**Requirements**:
+- Python 3.5 or greater.
+- Viewing the game board requires a unicode capable terminal.
+- Requires the stopwatch.py package (`pip install stopwatch.py`)
+- The learner_tree_renderer.py module has some additional requirements to render the tree, however these are not required to run the main program:
+  - AnyTree module (`pip install anytree`)
+  - Graphvis program (<https://www.graphviz.org/>)
 
 ## Overview
 
@@ -53,26 +59,28 @@ This is a complicated issue as you must account for the stochastic nature of the
 
 The `GreedyLearningAIPlayer` "learns" over a series of games.
 Over this series of games, it develops a list of scores for each tile, which I call the "brain".
-After each game it generates a new brain for the next game by selecting a "best candidate" from the previously generated brains and mutating it by perturbing one of the values in the brain by a configurable amount.
+After each game it generates a new brain for the next game by selecting a "best candidate" from the previously generated brains and mutating it by perturbing one of the values in the brain by a random, configurable amount.
 
 The key to the algorithm is selecting this "best candidate".
 It does this using an algorithm reminiscent of Monte-Carlo tree search.
 It holds a tree of previous brains, in which each brain is the child of the brain from which it was originally mutated.
 In a Monte-Carlo tree search, the algorithm determines which branch of the tree to explore using an "upper confidence bound" formula, which is performed for each node, and the branches with the highest UCB values are taken.
 The UCB formula is depicted below.
-This formula is carefully balanced to favor exploring branches which win a lot (so as not to waste time exploring bad branches), but also will explore "bad" branches in case there is a good path within this "bad" branch.
+This formula is carefully balanced to favor exploring branches which win a lot (so as not to waste time exploring bad branches), but also will explore "bad" branches occasionally in case there is a good path within this "bad" branch.
 
 ![The upper confidence bound formula](ucb.jpg)
 
 The same formula is used to select a "best candidate" in the `GreedyLearningAIPlayer`.
 However, unlike a Monte-Carlo tree search, which *explores* a state tree that already exists, the learning player *generates* a tree, choosing to expand brain nodes which have produced good results so far.
+
 In Monte-Carlo tree search, the algorithm follows the branch with the highest UCB at each layer until it reaches a leaf node, then picks randomly until a resolution, then the number of wins and number of games played are propagated up the tree through the nodes chosen at each layer and used to calculate the UCB values for the next iteration.
-The learning player uses a very similar approach including the upward propagation of wins and total games, though if it used the same method of choosing nodes to expand the tree would simply be a line straight down, as since it develops the tree as it goes, it would never come to a branch.
+
+The learning player uses a very similar approach including the upward propagation of wins and total games, though if it used the same method of choosing nodes to expand, the tree would simply be a line straight down, because since it develops the tree as it goes, it would never come to a branch if it was not forced to branch by expanding higher up nodes.
 For this reason, rather choosing the better branch until it reaches a leaf node to expand, it simply selects the single node with the highest UCB to expand, and adds a new child to that node.
 
 As a result of this, the tree of "brains" generated is reasonably balanced and usually each node has relatively few children (even after many iterations, typically no more than 3 children for a given node), as the algorithm prefers expanding a descendant rather than continually expanding a higher up brain.
-I take this as an indication that the learner does not try incremental variations on the same brain, rather it broadly creates variants and explores them relatively evenly, with emphasis on expanding nodes which have produced good results in the past, which is exactly what I was going for.
+I take this as an indication that the learner does not try repeated incremental variations on the same brain, rather it broadly creates variants and explores them relatively evenly, with emphasis on expanding brains which have produced good results in the past, which is exactly what I was going for.
 A typical tree after 100 iterations is depicted below.
-Each node contains an ID number, as well as the number of wins over total number of runs through that node or descendants of that node.
+In the image, each node contains an ID number, as well as the number of wins over total number of runs through that node or descendants of that node.
 
 ![Learning Tree](tree.jpg)
