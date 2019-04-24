@@ -184,6 +184,16 @@ class GameState:
             EndBoardTile()
         ]
 
+    @staticmethod
+    def make_from_slim(slim):
+        new = GameState(0)
+        for i, tile in enumerate(new.tiles):
+            tile.players[0] = slim.state[i][0]
+            tile.players[1] = slim.state[i][1]
+
+        return new
+
+
     def is_valid(self):
         """
         Whether the current state represented by this object is valid
@@ -270,3 +280,7 @@ class SlimGameState:
         self.state[dest][player] += 1
         if 5 <= dest <= 12:
             self.state[dest][1-player] = 0
+
+    def get_valid_moves(self, player, roll):
+        full_state = GameState.make_from_slim(self)
+        return full_state.get_valid_moves(player, roll)
