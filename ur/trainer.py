@@ -3,15 +3,18 @@ from player import base_player
 import ur
 import os
 
-N = 100000
+N = 1000
 PIECES = 4
 
 
 def main():
-    players = [player.greedy_learning_ai_player.GreedyLearningAIPlayer(), player.greedy_learning_ai_player.GreedyLearningAIPlayer()]
+    players = [player.greedy_learning_ai_player.GreedyLearningAIPlayer(),
+               player.greedy_learning_ai_player.GreedyLearningAIPlayer()]
     best, winrate = ur.run_game_sequence(players, N)
 
-    f = open(os.path.join(os.getcwd(), "training_results", "results.txt"), "a+")
+    results_path = os.path.join(os.getcwd(), "training_results")
+    os.mkdir(results_path)
+    f = open(os.path.join(results_path, "results.txt"), "a+")
 
     output = ["{:.3f}: [".format(winrate)]
     for i, val in enumerate(best.get_best_brain().tile_values):
