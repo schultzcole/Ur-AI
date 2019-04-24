@@ -79,8 +79,8 @@ In Monte-Carlo tree search, the algorithm follows the branch with the highest UC
 The learning player uses a very similar approach including the upward propagation of wins and total games, though if it used the same method of choosing nodes to expand, the tree would simply be a line straight down, because since it develops the tree as it goes, it would never come to a branch if it was not forced to branch by expanding higher up nodes.
 For this reason, rather choosing the better branch until it reaches a leaf node to expand, it simply selects the single node with the highest UCB to expand, and adds a new child to that node.
 
-As a result of this, the tree of "brains" generated is reasonably balanced and usually each node has relatively few children (even after many iterations, typically no more than 3 children for a given node), as the algorithm prefers expanding a descendant rather than continually expanding a higher up brain.
-I take this as an indication that the learner does not try repeated incremental variations on the same brain, rather it broadly creates variants and explores them relatively evenly, with emphasis on expanding brains which have produced good results in the past, which is exactly what I was going for.
+As a result of this, each node in the tree of "brains" usually has relatively few children (even after many iterations, typically no more than 3 children for a given node), as the algorithm prefers expanding a descendant rather than continually expanding a higher up brain, but on the other hand, the tree is not extremely linear either.
+I take this as an indication that the learner does not try repeated variations on the same brain over and over, rather it broadly creates variants and explores them relatively evenly, with emphasis on expanding brains which have produced good results in the past, which is exactly what I was going for.
 A typical tree after 100 iterations is depicted below.
 In the image, each node contains an ID number, as well as the number of wins over total number of runs through that node or descendants of that node.
 
