@@ -15,8 +15,8 @@ PIECES = 4
 def main():
     player_pairs = [
         # [player.RandomAIPlayer(), player.LookAheadAIPlayer(scoring_funcs.flat_score)],
-        [player.GreedyAIPlayer(scoring_funcs.pow2_score), player.GreedyAIPlayer(scoring_funcs.learned_score)],
-        [player.GreedyAIPlayer(scoring_funcs.pow2_score), player.LookAheadAIPlayer(scoring_funcs.learned_score)],
+        # [player.GreedyAIPlayer(scoring_funcs.pow2_score), player.GreedyAIPlayer(scoring_funcs.learned_score)],
+        # [player.GreedyAIPlayer(scoring_funcs.pow2_score), player.LookAheadAIPlayer(scoring_funcs.learned_score)],
         [player.GreedyAIPlayer(scoring_funcs.learned_score), player.LookAheadAIPlayer(scoring_funcs.learned_score)],
     ]
 

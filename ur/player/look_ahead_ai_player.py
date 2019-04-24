@@ -25,8 +25,11 @@ class LookAheadAIPlayer(BasePlayer):
             new_state.move(move, move + roll, player_idx)
 
             # will hold the expected score for each possible roll (0, 1, 2, 3, 4), weighted by the probability of
-            # that roll occurring
+            # that roll occurring.
             expected_score_for_roll = [0.0 for _ in prob]
+            # immediately set the expected score for a roll of 0 to the score of the current state, as if the
+            # opponent rolls a 0 the state will remain the same.
+            expected_score_for_roll[0] = self.score_func(new_state, player_idx) * prob[0]
 
             # Loop through possible opponent rolls,
             # skipping the first because there are no valid moves for a roll of 0
