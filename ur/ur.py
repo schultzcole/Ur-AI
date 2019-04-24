@@ -1,10 +1,10 @@
-import game_board
-import game_state
-from functools import reduce
 import operator
 import random
-from player import base_player
+from functools import reduce
 from stopwatch import Stopwatch
+import game_board
+import game_state
+import player
 import scoring_funcs
 
 PRINT_MOVES = False
@@ -17,8 +17,8 @@ def main():
         # [player.RandomAIPlayer(), player.RandomAIPlayer()],
         # [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.linear_score)],
         # [player.GreedyLearningAIPlayer(1, 3), player.GreedyLearningAIPlayer(1, 3)],
-        [base_player.RandomAIPlayer(), base_player.GreedyAIPlayer(scoring_funcs.learned_vs_learner_score)],
-        [base_player.GreedyAIPlayer(scoring_funcs.pow2_score), base_player.GreedyAIPlayer(scoring_funcs.learned_vs_learner_score)],
+        [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.learned_vs_learner_score)],
+        [player.GreedyAIPlayer(scoring_funcs.pow2_score), player.GreedyAIPlayer(scoring_funcs.learned_vs_learner_score)],
         # [player.RandomAIPlayer(), player.GreedyAIPlayer(scoring_funcs.penalize_start_score)],
     ]
 

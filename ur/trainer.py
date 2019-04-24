@@ -1,3 +1,4 @@
+import player.greedy_learning_ai_player
 from player import base_player
 import ur
 import os
@@ -7,7 +8,7 @@ PIECES = 4
 
 
 def main():
-    players = [base_player.GreedyLearningAIPlayer(), base_player.GreedyLearningAIPlayer()]
+    players = [player.greedy_learning_ai_player.GreedyLearningAIPlayer(), player.greedy_learning_ai_player.GreedyLearningAIPlayer()]
     best, winrate = ur.run_game_sequence(players, N)
 
     f = open(os.path.join(os.getcwd(), "training_results", "results.txt"), "a+")
