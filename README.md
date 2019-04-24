@@ -1,11 +1,12 @@
 # AI Agent for the Royal Game of Ur
 
 **Requirements**:
+
 - Python 3.5 or greater.
 - Viewing the game board requires a unicode capable terminal.
-- Requires the stopwatch.py package (`pip install stopwatch.py`)
+- Requires the stopwatch.py package (<https://pypi.org/project/stopwatch.py/>, `pip install stopwatch.py`)
 - The learner_tree_renderer.py module has some additional requirements to render the tree, however these are not required to run the main program:
-  - AnyTree module (`pip install anytree`)
+  - AnyTree package (<https://pypi.org/project/anytree/>, `pip install anytree`)
   - Graphvis program (<https://www.graphviz.org/>)
 
 ## Overview
