@@ -8,7 +8,7 @@ import player
 import scoring_funcs
 
 PRINT_MOVES = False
-N = 1000
+N = 100
 PIECES = 4
 
 
