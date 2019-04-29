@@ -8,7 +8,7 @@ import player
 import scoring_funcs
 
 PRINT_MOVES = False
-N = 100
+N = 1000
 PIECES = 4
 
 
@@ -17,7 +17,9 @@ def main():
         # [player.RandomAIPlayer(), player.LookAheadAIPlayer(scoring_funcs.flat_score)],
         # [player.GreedyAIPlayer(scoring_funcs.pow2_score), player.GreedyAIPlayer(scoring_funcs.learned_score)],
         # [player.GreedyAIPlayer(scoring_funcs.pow2_score), player.LookAheadAIPlayer(scoring_funcs.learned_score)],
-        [player.GreedyAIPlayer(scoring_funcs.learned_score), player.LookAheadAIPlayer(scoring_funcs.learned_score)],
+        [player.GreedyAIPlayer(scoring_funcs.learned_score), player.LookAheadAIPlayer(scoring_funcs.learned_score, 1)],
+        [player.GreedyAIPlayer(scoring_funcs.learned_score), player.LookAheadAIPlayer(scoring_funcs.learned_score, 2)],
+        [player.LookAheadAIPlayer(scoring_funcs.learned_score, 1), player.LookAheadAIPlayer(scoring_funcs.learned_score, 2)],
     ]
 
     for pair in player_pairs:

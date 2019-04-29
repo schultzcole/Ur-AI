@@ -193,7 +193,6 @@ class GameState:
 
         return new
 
-
     def is_valid(self):
         """
         Whether the current state represented by this object is valid
@@ -269,8 +268,9 @@ class SlimGameState:
 
     def __init__(self, state):
         self.state = {}
-        for i, tile in enumerate(state.tiles):
-            self.state[i] = [tile.players[0], tile.players[1]]
+        if state is not None:
+            for i, tile in enumerate(state.tiles):
+                self.state[i] = [tile.players[0], tile.players[1]]
 
     def move(self, source, dest, player):
         """
@@ -284,3 +284,10 @@ class SlimGameState:
     def get_valid_moves(self, player, roll):
         full_state = GameState.make_from_slim(self)
         return full_state.get_valid_moves(player, roll)
+
+    def __deepcopy__(self, memodict={}):
+        result = SlimGameState(None)
+        for key, val in self.state.items():
+            result.state[key] = [val[0], val[1]]
+
+        return result
