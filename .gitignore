@@ -112,3 +112,4 @@ celerybeat-schedule
 
 profile/
 training_results/
+all_pairs_results/

@@ -17,6 +17,7 @@ player_archetypes = [
     # [player.GreedyAIPlayer, scoring_funcs.focus_rosettes_score],
     # [player.GreedyAIPlayer, scoring_funcs.penalize_start_score],
     [player.GreedyAIPlayer, scoring_funcs.learned_score],
+    [player.GreedyLearningAIPlayer, scoring_funcs.learned_score],
     # [player.LookAheadAIPlayer, scoring_funcs.flat_score, 1],
     # [player.LookAheadAIPlayer, scoring_funcs.linear_score, 1],
     [player.LookAheadAIPlayer, scoring_funcs.pow1_5_score, 1],
