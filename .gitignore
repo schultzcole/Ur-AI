@@ -108,3 +108,7 @@ celerybeat-schedule
 
 # Jetbrains cache
 .idea/
+
+
+profile/
+training_results/
