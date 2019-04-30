@@ -23,12 +23,7 @@ class GreedyLearningAIPlayer(GreedyAIPlayer):
         self._brain = self._tree_root.select_in_descendants().add_child()
 
     def clean_up(self):
-        print("Best brain:\n[", end="")
-
-        for i, val in enumerate(self.get_best_brain().tile_values):
-            print("{:.3f}{}".format(val, "" if i == 15 else ", "), end="")
-
-        print("]")
+        pass
 
     def get_best_brain(self):
         return self._tree_root.winningest_brain()
