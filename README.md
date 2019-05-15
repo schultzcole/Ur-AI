@@ -45,16 +45,12 @@ Currently, I have several agents implemented:
 - A learning greedy player, which is similar to the standard greedy player, except that after each game, it adjusts the tile ratings it uses based on whether it won or lost.
   - This uses a tree structure and algorithm reminiscent of a Monte-Carlo Tree Search.
   - The algorithm is explained in greater detail below.
+- A look-ahead player, which looks forward to future turns to estimate the best move. Accounts for the stochastic nature of the dice rolls using a weighted average of the predicted score for each possible roll.
   
 As of right now, the best agent is a Greedy Player using the learned tile values from a Learning Greedy Player.
 Best results are achieved when training two Learning Greedy Players against one another.
 More games will result in better learned tile values, however reasonably good results can be achieved with about 10,000 games.
 Under such circumstances, a Greedy Player using values learned by a Learning Greedy Player can achieve a ~90% win rate against a random agent, and a ~70% win rate against the next best Greedy Agent.
-
-## Future Plans
-
-In the future I plan to implement an agent that looks deeper into the state tree, beyond just the current move and at the opponent's next move.
-This is a complicated issue as you must account for the stochastic nature of the game, and make judgments about which of the opponent's moves are most likely to occur.
 
 ## Explanation of the Learning Algorithm
 
